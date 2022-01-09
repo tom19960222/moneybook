@@ -1,28 +1,32 @@
 const Koa = require('koa');
+const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const dayjs = require('dayjs');
 const sql = require('./db');
 
 const app = new Koa();
+const router = new Router();
 app.use(bodyParser());
 
-app.post('/', async (ctx) => {
+router.post('/', async (ctx) => {
   const price = parseInt(ctx.request.body.price);
   const type = ctx.request.body.type;
   const timeNow = dayjs().toDate();
 
-  if(isNaN(price) || price < 0) {
+  if (isNaN(price) || price < 0) {
     return ctx.throw(400, '價格需為正整數');
   }
 
-  await sql`INSERT INTO moneybook (price, type, time) VALUES (${price}, ${type}, ${timeNow})`;
+  await sql`INSERT INTO moneybook (price, type, time) VALUES (${price}, ${type}, ${timeNow.toISOString()})`;
 
   ctx.body = {
     price,
     type,
     time: timeNow.toISOString(),
-  }
+  };
 });
+
+app.use(router.routes()).use(router.allowedMethods());
 
 const startUp = () => {
   // Check if the database is connected.
