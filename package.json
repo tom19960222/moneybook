@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "pm2-docker server.js"
+  },
   "dependencies": {
     "dayjs": "^1.10.7",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "pm2": "^5.1.2",
     "postgres": "^1.0.2"
   },
   "devDependencies": {
