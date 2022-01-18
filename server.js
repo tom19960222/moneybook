@@ -11,17 +11,19 @@ app.use(bodyParser());
 router.post('/', async (ctx) => {
   const price = parseInt(ctx.request.body.price);
   const type = ctx.request.body.type;
+  const remark = ctx.request.body.remark ?? null;
   const timeNow = dayjs().toDate();
 
   if (isNaN(price) || price < 0) {
     return ctx.throw(400, '價格需為正整數');
   }
 
-  await sql`INSERT INTO moneybook (price, type, time) VALUES (${price}, ${type}, ${timeNow.toISOString()})`;
+  await sql`INSERT INTO moneybook (price, type, time, remark) VALUES (${price}, ${type}, ${timeNow.toISOString()}, ${remark})`;
 
   ctx.body = {
     price,
     type,
+    remark,
     time: timeNow.toISOString(),
   };
 });
