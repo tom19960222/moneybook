@@ -12,7 +12,10 @@ router.post('/', async (ctx) => {
   const price = parseInt(ctx.request.body.price);
   const type = ctx.request.body.type;
   const remark = ctx.request.body.remark ?? null;
-  const timeNow = dayjs().toDate();
+
+  let timeNow = dayjs();
+  const timeInRequest = dayjs(ctx.request.body.time);
+  if(ctx.request.body.time && timeInRequest.isValid()) timeNow = timeInRequest;
 
   if (isNaN(price) || price < 0) {
     return ctx.throw(400, '價格需為正整數');
